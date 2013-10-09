@@ -569,40 +569,42 @@ public class StickyListHeadersListView extends ListView {
 	// TODO handle touches better, multitouch etc.
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		int action = ev.getAction();
-		if (action == MotionEvent.ACTION_DOWN
-				&& ev.getY() <= mHeaderBottomPosition) {
-			mHeaderDownY = ev.getY();
-			mHeaderBeingPressed = true;
-			mHeader.setPressed(true);
-			mHeader.invalidate();
-			invalidate(0, 0, getWidth(), mHeaderBottomPosition);
-			return true;
-		}
-		if (mHeaderBeingPressed) {
-			if (Math.abs(ev.getY() - mHeaderDownY) < mViewConfig
-					.getScaledTouchSlop()) {
-				if (action == MotionEvent.ACTION_UP
-						|| action == MotionEvent.ACTION_CANCEL) {
-					mHeaderDownY = -1;
-					mHeaderBeingPressed = false;
-					mHeader.setPressed(false);
-					mHeader.invalidate();
-					invalidate(0, 0, getWidth(), mHeaderBottomPosition);
-					if (mOnHeaderClickListener != null) {
-						mOnHeaderClickListener.onHeaderClick(this, mHeader,
-								mHeaderPosition, mCurrentHeaderId, true);
-					}
-				}
-				return true;
-			} else {
-				mHeaderDownY = -1;
-				mHeaderBeingPressed = false;
-				mHeader.setPressed(false);
-				mHeader.invalidate();
-				invalidate(0, 0, getWidth(), mHeaderBottomPosition);
-			}
-		}
+	  if (mHeader != null) {	    
+  		int action = ev.getAction();
+  		if (action == MotionEvent.ACTION_DOWN
+  				&& ev.getY() <= mHeaderBottomPosition) {
+  			mHeaderDownY = ev.getY();
+  			mHeaderBeingPressed = true;
+  			mHeader.setPressed(true);
+  			mHeader.invalidate();
+  			invalidate(0, 0, getWidth(), mHeaderBottomPosition);
+  			return true;
+  		}
+  		if (mHeaderBeingPressed) {
+  			if (Math.abs(ev.getY() - mHeaderDownY) < mViewConfig
+  					.getScaledTouchSlop()) {
+  				if (action == MotionEvent.ACTION_UP
+  						|| action == MotionEvent.ACTION_CANCEL) {
+  					mHeaderDownY = -1;
+  					mHeaderBeingPressed = false;
+  					mHeader.setPressed(false);
+  					mHeader.invalidate();
+  					invalidate(0, 0, getWidth(), mHeaderBottomPosition);
+  					if (mOnHeaderClickListener != null) {
+  						mOnHeaderClickListener.onHeaderClick(this, mHeader,
+  								mHeaderPosition, mCurrentHeaderId, true);
+  					}
+  				}
+  				return true;
+  			} else {
+  				mHeaderDownY = -1;
+  				mHeaderBeingPressed = false;
+  				mHeader.setPressed(false);
+  				mHeader.invalidate();
+  				invalidate(0, 0, getWidth(), mHeaderBottomPosition);
+  			}
+  		}
+	  }
 		return super.onTouchEvent(ev);
 	}
 

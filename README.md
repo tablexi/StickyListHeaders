@@ -1,9 +1,9 @@
 StickyListHeaders
 =================
-StickyListHeaders is an Android library that makes it easy to integrate section headers in your `ListView`. These section headers stick to the top like in the new People app of Android 4.0 Ice Cream Sandwich. This behavior is also found in lists with sections on iOS devices. This library can also be used for without the sticky functionality if you just want section headers.
+StickyListHeaders is an Android library that makes it easy to integrate section headers in your `ListView`. These section headers stick to the top like in the new People app of Android 4.0 Ice Cream Sandwich. This behavior is also found in lists with sections on iOS devices. This library can also be used without the sticky functionality if you just want section headers.
 
-StickyListHeaders actively supports android versions 2.3 (gingerbread) and above
-That said, it should be compatible with much older versions of android as well but these are not actively tested.
+StickyListHeaders actively supports android versions 2.3 (gingerbread) and above.
+That said, it works all the way down to 2.1 but is not actively tested or working perfectly.
 
 Here is a short gif showing the functionality you get with this library:
 
@@ -12,39 +12,37 @@ Here is a short gif showing the functionality you get with this library:
 
 Goal
 ----
-The goal of this project is to deliver a high performance replacement to `ListView`. You should with minimal effort and time be able to add section headers to a list. This should be done via a simple to use api without any special features. This library will always priorities general use cases over special ones. This means that the library will add very few public methods to the standard `ListView` and will not try to work for every use case. While i will want to support even narrow use cases i will not do se if it comprimises the api or any other feature.
+The goal of this project is to deliver a high performance replacement to `ListView`. You should with minimal effort and time be able to add section headers to a list. This should be done via a simple to use API without any special features. This library will always priorities general use cases over special ones. This means that the library will add very few public methods to the standard `ListView` and will not try to work for every use case. While I will want to support even narrow use cases I will not do so if it compromises the API or any other feature.
 
 
-Getting started
+Installing
 ---------------
-###Installing the library
-First of all you will have to clone the library.
-
-If you are using a unix-like terminal first use the following command to navigate to the directory or you choosing.
-```shell
-cd ~/my/directory
+###Gradle
+Add the following gradle dependency exchanging `x.x.x` for the latest release.
+```groovy
+dependencies {
+    compile 'se.emilsjolander:stickylistheaders:x.x.x'
+}
 ```
-After you are in the directory you want to clone the library to, use this command to clone StickyListHeaders.
+
+###Cloning
+First of all you will have to clone the library.
 ```shell
 git clone https://github.com/emilsjolander/StickyListHeaders.git
 ```
 
-Now that you have the library you will have to import it into eclipse (or any other ide but this is how you do it in eclipse).
-Inn eclipse navigate the menus like this.
+Now that you have the library you will have to import it into Android Studio.
+In Android Studio navigate the menus like this.
 ```
-file -> new -> project -> android project from existing source
+File -> Import Project ...
 ```
-In the following dialog navigate to StickyListHeaders which you cloned to your computer in the previous steps.
-Press finish and you should have the library in your workspace.
+In the following dialog navigate to StickyListHeaders which you cloned to your computer in the previous steps and select the `build.gradle`.
 
-Now right click the project you want to use StickyListHeaders in and click on `properties`. In the dialog that appears you should navigate to `android` in the side menu. Now press the add button on the bottom right of the dialog and choose StickyListHeaders. Press ok and you are good to go!
-
-
-###Code
+Getting Started
+---------------
 Ok lets start with your activities or fragments xml file. It might look something like this.
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
+<se.emilsjolander.stickylistheaders.StickyListHeadersListView
     android:id="@+id/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
@@ -84,7 +82,8 @@ public class MyAdapter extends BaseAdapter implements StickyListHeadersAdapter {
         return position;
     }
 
-    @Override public View getView(int position, View convertView, ViewGroup parent) {
+    @Override 
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
         if (convertView == null) {
@@ -101,7 +100,8 @@ public class MyAdapter extends BaseAdapter implements StickyListHeadersAdapter {
         return convertView;
     }
 
-    @Override public View getHeaderView(int position, View convertView, ViewGroup parent) {
+    @Override 
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
         HeaderViewHolder holder;
         if (convertView == null) {
             holder = new HeaderViewHolder();
@@ -134,10 +134,17 @@ public class MyAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 }
 ```
 
-Thats it! look through the api docs below to get know about things to customize and if you have any problems getting started please open an issue as it probably means the getting started guide need some improvement!
+That's it! Look through the API docs below to get know about things to customize and if you have any problems getting started please open an issue as it probably means the getting started guide need some improvement!
 
+Upgrading from 1.x versions
+---------------------------
+First of all the package name has changed from `com.emilsjolander.components.stickylistheaders` -> `se.emilsjolander.stickylistheaders` so update all your imports and xml files using StickyListHeaders!
 
-Api
+If you are Upgrading from a version prior to 2.x you might run into the following problems.
+1. `StickyListHeadersListView` is no longer a `ListView` subclass. This means that it cannot be passed into a method expecting a ListView. You can retrieve an instance of the `ListView` via `getWrappedList()` but use this with caution as things will probably break if you start setting things directly on that list.
+2. Because `StickyListHeadersListView` is no longer a `ListView` it does not support all the methods. I have implemented delegate methods for all the usual methods and gladly accept pull requests for more.
+
+API
 ---
 ###StickyListHeadersAdapter
 ```java
@@ -156,57 +163,41 @@ Your adapter must implement this interface to function with `StickyListHeadersLi
 Headers are sticky by default but that can easily be changed with this setter. There is of course also a matching getter for the sticky property.
 ```java
 public void setAreHeadersSticky(boolean areHeadersSticky);
-public boolean getAreHeadersSticky();
+public boolean areHeadersSticky();
 ```
 
-A OnHeaderClickListener is the header version of OnItemClickListener. This is the setter for it and the interface of the listener. The currentlySticky boolean flag indicated if the header that was clicked was sticking to the top at the time it was clicked.
+A `OnHeaderClickListener` is the header version of OnItemClickListener. This is the setter for it and the interface of the listener. The currentlySticky boolean flag indicated if the header that was clicked was sticking to the top at the time it was clicked.
 ```java
-public void setOnHeaderClickListener(OnHeaderClickListener onHeaderClickListener);
+public void setOnHeaderClickListener(OnHeaderClickListener listener);
 
 public interface OnHeaderClickListener {
     public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky);
 }
 ```
 
-StickyListHeaders wraps the adapter passed to `setAdapter()` is it's own adapter, so `getAdapter()` will not return the adapter that `setAdapter()` was passed. It is often recomended that you keep a reference to the adapter in your activity/fragment but if this does not fit you there is a method to retrieve the original adapter.
+A `OnStickyHeaderOffsetChangedListener` is a Listener used for listening to when the sticky header slides out of the screen. The offset parameter will slowly grow to be the same size as the headers height. Use the listeners callback to transform the header in any way you see fit, the standard android contacts app dims the text for example.
 ```java
-public StickyListHeadersAdapter getWrappedAdapter();
+public void setOnStickyHeaderOffsetChangedListener(OnStickyHeaderOffsetChangedListener listener);
+
+public interface OnStickyHeaderOffsetChangedListener {
+    public void onStickyHeaderOffsetChanged(StickyListHeadersListView l, View header, int offset);
+}
 ```
 
-This is a setter and getter for an internal attribute that controlls if the list should be drawn under the stuck header. The default value is false. If you want to see the list scroll under your header(the header should have a semi-transparent background) you will want to set this attribute to `true`.
+Here are two methods added to the API for inspecting the children of the underlying `ListView`. I could not override the normal `getChildAt()` and `getChildCount()` methods as that would mess up the underlying measurement system of the `FrameLayout` wrapping the `ListView`.
+```java
+public View getListChildAt(int index);
+public int getListChildCount();
+```
+
+This is a setter and getter for an internal attribute that controls if the list should be drawn under the stuck header. The default value is true. If you do not want to see the list scroll under your header you will want to set this attribute to `false`.
 ```java
 public void setDrawingListUnderStickyHeader(boolean drawingListUnderStickyHeader);
 public boolean isDrawingListUnderStickyHeader();
 ```
 
-
-Limitations
------------
-There is currently two limitations with this library, they both have to do with what kind of views the header can contain and the both only apply for when sticky header are activated.
-
-The first limitation is that the header can as of now not contain anything that animates, the list will not crash but the animation will just not run as expected while the header is stuck. The other limitation is that it is currently not possible to have interactive elements in the header, Buttons, switches, etc. will only work when the header is not stuck.
-
-
 Contributing
 ------------
-Contributions are very welcome. Now that this library has grown in popularity i have a hard time keeping upp with all the issues while tending to a multitude of other projects as well as school. So if you find a big in the library or want a feature and think you can fix it yourself, fork + pull request and i will greatly appreciate it!
+Contributions are very welcome. Now that this library has grown in popularity i have a hard time keeping upp with all the issues while tending to a multitude of other projects as well as school. So if you find a bug in the library or want a feature and think you can fix it yourself, fork + pull request and i will greatly appreciate it!
 
 I love getting pull requests for new features as well as bugs. However, when it comes to new features please also explain the use case and way you think the library should include it. If you don't want to start coding a feature without knowing if the feature will have chance of being included, open an issue and we can discuss the feature!
-
-
-License
--------
-
-    Copyright 2013 Emil Sjölander
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.

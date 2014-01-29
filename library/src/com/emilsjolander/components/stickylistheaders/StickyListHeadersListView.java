@@ -364,7 +364,6 @@ public class StickyListHeadersListView extends ListView {
 		canvas.restore();
 	}
 
-	@SuppressLint("NewApi")
 	private void measureHeader() {
 
 		int widthMeasureSpec = MeasureSpec.makeMeasureSpec(getWidth()
@@ -434,8 +433,7 @@ public class StickyListHeadersListView extends ListView {
 			mHeaderPosition = firstVisibleItem;
 			mCurrentHeaderId = mAdapter.getHeaderId(firstVisibleItem);
 			mHeader = mAdapter.getHeaderView(mHeaderPosition, mHeader, this);
-			if (mHeader !=	null)
-				measureHeader();
+			measureHeader();
 		}
 
 		int childCount = getChildCount();
@@ -569,42 +567,40 @@ public class StickyListHeadersListView extends ListView {
 	// TODO handle touches better, multitouch etc.
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-	  if (mHeader != null) {	    
-  		int action = ev.getAction();
-  		if (action == MotionEvent.ACTION_DOWN
-  				&& ev.getY() <= mHeaderBottomPosition) {
-  			mHeaderDownY = ev.getY();
-  			mHeaderBeingPressed = true;
-  			mHeader.setPressed(true);
-  			mHeader.invalidate();
-  			invalidate(0, 0, getWidth(), mHeaderBottomPosition);
-  			return true;
-  		}
-  		if (mHeaderBeingPressed) {
-  			if (Math.abs(ev.getY() - mHeaderDownY) < mViewConfig
-  					.getScaledTouchSlop()) {
-  				if (action == MotionEvent.ACTION_UP
-  						|| action == MotionEvent.ACTION_CANCEL) {
-  					mHeaderDownY = -1;
-  					mHeaderBeingPressed = false;
-  					mHeader.setPressed(false);
-  					mHeader.invalidate();
-  					invalidate(0, 0, getWidth(), mHeaderBottomPosition);
-  					if (mOnHeaderClickListener != null) {
-  						mOnHeaderClickListener.onHeaderClick(this, mHeader,
-  								mHeaderPosition, mCurrentHeaderId, true);
-  					}
-  				}
-  				return true;
-  			} else {
-  				mHeaderDownY = -1;
-  				mHeaderBeingPressed = false;
-  				mHeader.setPressed(false);
-  				mHeader.invalidate();
-  				invalidate(0, 0, getWidth(), mHeaderBottomPosition);
-  			}
-  		}
-	  }
+		int action = ev.getAction();
+		if (action == MotionEvent.ACTION_DOWN
+				&& ev.getY() <= mHeaderBottomPosition) {
+			mHeaderDownY = ev.getY();
+			mHeaderBeingPressed = true;
+			mHeader.setPressed(true);
+			mHeader.invalidate();
+			invalidate(0, 0, getWidth(), mHeaderBottomPosition);
+			return true;
+		}
+		if (mHeaderBeingPressed) {
+			if (Math.abs(ev.getY() - mHeaderDownY) < mViewConfig
+					.getScaledTouchSlop()) {
+				if (action == MotionEvent.ACTION_UP
+						|| action == MotionEvent.ACTION_CANCEL) {
+					mHeaderDownY = -1;
+					mHeaderBeingPressed = false;
+					mHeader.setPressed(false);
+					mHeader.invalidate();
+					invalidate(0, 0, getWidth(), mHeaderBottomPosition);
+					if (mOnHeaderClickListener != null) {
+						mOnHeaderClickListener.onHeaderClick(this, mHeader,
+								mHeaderPosition, mCurrentHeaderId, true);
+					}
+				}
+				return true;
+			} else {
+				mHeaderDownY = -1;
+				mHeaderBeingPressed = false;
+				mHeader.setPressed(false);
+				mHeader.invalidate();
+				invalidate(0, 0, getWidth(), mHeaderBottomPosition);
+			}
+		}
 		return super.onTouchEvent(ev);
 	}
 

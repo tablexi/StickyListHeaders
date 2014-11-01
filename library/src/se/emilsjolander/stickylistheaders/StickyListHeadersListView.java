@@ -39,6 +39,8 @@ public class StickyListHeadersListView extends FrameLayout {
     public interface OnHeaderClickListener {
         void onHeaderClick(StickyListHeadersListView l, View header,
                                   int itemPosition, long headerId, boolean currentlySticky);
+        boolean onHeaderLongClick(StickyListHeadersListView l, View header,
+            int itemPosition, long headerId, boolean currentlySticky);
     }
 
     /**
@@ -388,6 +390,15 @@ public class StickyListHeadersListView extends FrameLayout {
                             mHeaderPosition, mHeaderId, true);
                 }
             });
+            mHeader.setOnLongClickListener(new OnLongClickListener() {
+              
+              @Override
+              public boolean onLongClick(View v) {
+                return mOnHeaderClickListener.onHeaderLongClick(
+                    StickyListHeadersListView.this, mHeader,
+                    mHeaderPosition, mHeaderId, true);
+              }
+            });
         }
         mHeader.setClickable(true);
     }
@@ -518,6 +529,14 @@ public class StickyListHeadersListView extends FrameLayout {
                     headerId, false);
         }
 
+        @Override
+        public boolean onHeaderLongClick(View header, int itemPosition,
+            long headerId) {
+          return mOnHeaderClickListener.onHeaderLongClick(
+              StickyListHeadersListView.this, header, itemPosition,
+              headerId, false);
+        }
+
     }
 
     private boolean isStartOfSection(int position) {
@@ -606,6 +625,15 @@ public class StickyListHeadersListView extends FrameLayout {
                                     StickyListHeadersListView.this, mHeader,
                                     mHeaderPosition, mHeaderId, true);
                         }
+                    });
+                    mHeader.setOnLongClickListener(new OnLongClickListener() {
+                      
+                      @Override
+                      public boolean onLongClick(View v) {
+                        return mOnHeaderClickListener.onHeaderLongClick(
+                                    StickyListHeadersListView.this, mHeader,
+                                    mHeaderPosition, mHeaderId, true);
+                      }
                     });
                 }
             } else {

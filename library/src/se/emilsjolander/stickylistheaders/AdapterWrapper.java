@@ -8,6 +8,7 @@ import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
@@ -27,6 +28,7 @@ class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
 
 	interface OnHeaderClickListener {
 		void onHeaderClick(View header, int itemPosition, long headerId);
+		boolean onHeaderLongClick(View header, int itemPosition, long headerId);
 	}
 
 	final StickyListHeadersAdapter mDelegate;
@@ -141,6 +143,17 @@ class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
 				}
 			}
 		});
+		header.setOnLongClickListener(new OnLongClickListener() {
+
+      @Override
+      public boolean onLongClick(View v) {
+        if(mOnHeaderClickListener != null){
+          long headerId = mDelegate.getHeaderId(position);
+          return mOnHeaderClickListener.onHeaderLongClick(v, position, headerId);
+        }
+        return false;
+      }
+    });
 		return header;
 	}
 

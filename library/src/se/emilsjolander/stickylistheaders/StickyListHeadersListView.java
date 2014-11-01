@@ -1105,24 +1105,4 @@ public class StickyListHeadersListView extends FrameLayout {
         mList.setBlockLayoutChildren(blockLayoutChildren);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void setMultiChoiceModeListener(MultiChoiceModeListener listener) {
-        requireSdkVersion(Build.VERSION_CODES.HONEYCOMB);
-        mList.setMultiChoiceModeListener(listener);
-    }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        if (superState != BaseSavedState.EMPTY_STATE) {
-          throw new IllegalStateException("Handling non empty state of parent class is not implemented");
-        }
-        return mList.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
-        mList.onRestoreInstanceState(state);
-    }
 }

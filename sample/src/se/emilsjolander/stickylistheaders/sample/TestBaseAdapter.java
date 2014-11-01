@@ -1,6 +1,4 @@
-package se.emilsjolander.stickylistheaders;
-
-import java.util.ArrayList;
+package se.emilsjolander.stickylistheaders.sample;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,9 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-/**
- * @author Emil Sjölander
- */
+import java.util.ArrayList;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+
 public class TestBaseAdapter extends BaseAdapter implements
         StickyListHeadersAdapter, SectionIndexer {
 
@@ -121,6 +120,10 @@ public class TestBaseAdapter extends BaseAdapter implements
 
     @Override
     public int getPositionForSection(int section) {
+        if (mSectionIndices.length == 0) {
+            return 0;
+        }
+        
         if (section >= mSectionIndices.length) {
             section = mSectionIndices.length - 1;
         } else if (section < 0) {

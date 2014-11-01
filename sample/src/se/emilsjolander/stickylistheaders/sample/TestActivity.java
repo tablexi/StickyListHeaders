@@ -1,22 +1,32 @@
-package se.emilsjolander.stickylistheaders;
+package se.emilsjolander.stickylistheaders.sample;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * @author Emil Sjölander
  */
 public class TestActivity extends ActionBarActivity implements
         AdapterView.OnItemClickListener, StickyListHeadersListView.OnHeaderClickListener,
-        StickyListHeadersListView.OnStickyHeaderOffsetChangedListener {
+        StickyListHeadersListView.OnStickyHeaderOffsetChangedListener,
+        StickyListHeadersListView.OnStickyHeaderChangedListener {
 
     private TestBaseAdapter mAdapter;
     private DrawerLayout mDrawerLayout;
@@ -24,6 +34,7 @@ public class TestActivity extends ActionBarActivity implements
     private boolean fadeHeader = true;
 
     private StickyListHeadersListView stickyList;
+    private SwipeRefreshLayout refreshLayout;
 
     private Button restoreButton;
     private Button updateButton;
@@ -33,17 +44,32 @@ public class TestActivity extends ActionBarActivity implements
     private CheckBox fadeCheckBox;
     private CheckBox drawBehindCheckBox;
     private CheckBox fastScrollCheckBox;
+    private Button openExpandableListButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
+
         mAdapter = new TestBaseAdapter(this);
 
         stickyList = (StickyListHeadersListView) findViewById(R.id.list);
         stickyList.setOnItemClickListener(this);
         stickyList.setOnHeaderClickListener(this);
+        stickyList.setOnStickyHeaderChangedListener(this);
         stickyList.setOnStickyHeaderOffsetChangedListener(this);
         stickyList.addHeaderView(getLayoutInflater().inflate(R.layout.list_header, null));
         stickyList.addFooterView(getLayoutInflater().inflate(R.layout.list_footer, null));
@@ -69,6 +95,8 @@ public class TestActivity extends ActionBarActivity implements
 
         restoreButton = (Button) findViewById(R.id.restore_button);
         restoreButton.setOnClickListener(buttonListener);
+        openExpandableListButton = (Button) findViewById(R.id.open_expandable_list_button);
+        openExpandableListButton.setOnClickListener(buttonListener);
         updateButton = (Button) findViewById(R.id.update_button);
         updateButton.setOnClickListener(buttonListener);
         clearButton = (Button) findViewById(R.id.clear_button);
@@ -82,6 +110,8 @@ public class TestActivity extends ActionBarActivity implements
         drawBehindCheckBox.setOnCheckedChangeListener(checkBoxListener);
         fastScrollCheckBox = (CheckBox) findViewById(R.id.fast_scroll_checkBox);
         fastScrollCheckBox.setOnCheckedChangeListener(checkBoxListener);
+
+        stickyList.setStickyHeaderTopOffset(-20);
     }
 
     @Override
@@ -102,7 +132,6 @@ public class TestActivity extends ActionBarActivity implements
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -141,22 +170,22 @@ public class TestActivity extends ActionBarActivity implements
                 case R.id.clear_button:
                     mAdapter.clear();
                     break;
+                case R.id.open_expandable_list_button:
+                    Intent intent = new Intent(TestActivity.this,ExpandableListTestActivity.class);
+                    startActivity(intent);
+                    break;
             }
         }
     };
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-        Toast.makeText(this, "Item " + position + " clicked!",
-                Toast.LENGTH_SHORT).show();
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, "Item " + position + " clicked!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onHeaderClick(StickyListHeadersListView l, View header,
-                              int itemPosition, long headerId, boolean currentlySticky) {
-        Toast.makeText(this, "Header " + headerId + " currentlySticky ? " + currentlySticky,
-                Toast.LENGTH_SHORT).show();
+    public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
+        Toast.makeText(this, "Header " + headerId + " currentlySticky ? " + currentlySticky, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -166,4 +195,11 @@ public class TestActivity extends ActionBarActivity implements
             header.setAlpha(1 - (offset / (float) header.getMeasuredHeight()));
         }
     }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void onStickyHeaderChanged(StickyListHeadersListView l, View header, int itemPosition, long headerId) {
+        header.setAlpha(1);
+    }
+
 }

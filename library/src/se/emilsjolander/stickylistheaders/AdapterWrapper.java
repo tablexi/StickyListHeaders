@@ -31,7 +31,7 @@ class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
 		boolean onHeaderLongClick(View header, int itemPosition, long headerId);
 	}
 
-	final StickyListHeadersAdapter mDelegate;
+	StickyListHeadersAdapter mDelegate;
 	private final List<View> mHeaderCache = new LinkedList<View>();
 	private final Context mContext;
 	private Drawable mDivider;

@@ -137,7 +137,7 @@ class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
 
 			@Override
 			public void onClick(View v) {
-				if(mOnHeaderClickListener != null){
+				if(mOnHeaderClickListener != null && position < getCount()){
 					long headerId = mDelegate.getHeaderId(position);
 					mOnHeaderClickListener.onHeaderClick(v, position, headerId);
 				}
@@ -147,7 +147,7 @@ class AdapterWrapper extends BaseAdapter implements StickyListHeadersAdapter {
 
       @Override
       public boolean onLongClick(View v) {
-        if(mOnHeaderClickListener != null){
+        if(mOnHeaderClickListener != null && position < getCount()){
           long headerId = mDelegate.getHeaderId(position);
           return mOnHeaderClickListener.onHeaderLongClick(v, position, headerId);
         }

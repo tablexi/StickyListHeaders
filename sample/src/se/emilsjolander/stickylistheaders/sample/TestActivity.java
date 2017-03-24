@@ -189,6 +189,11 @@ public class TestActivity extends ActionBarActivity implements
     }
 
     @Override
+    public boolean onHeaderLongClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
+        return false;
+    }
+
+    @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onStickyHeaderOffsetChanged(StickyListHeadersListView l, View header, int offset) {
         if (fadeHeader && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

@@ -40,6 +40,11 @@ public class ExpandableListTestActivity extends Activity {
                     mListView.collapse(headerId);
                 }
             }
+
+            @Override
+            public boolean onHeaderLongClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
+                return false;
+            }
         });
     }
     //animation executor

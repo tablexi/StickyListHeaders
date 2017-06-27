@@ -10,8 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -27,6 +25,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
+
 import se.emilsjolander.stickylistheaders.WrapperViewList.LifeCycleListener;
 
 /**
@@ -1169,9 +1168,9 @@ public class StickyListHeadersListView extends FrameLayout {
         /**
          * Constructor called from {@link #CREATOR}
          */
-        private SavedState(Parcel in, final ClassLoader loader) {
+        private SavedState(Parcel in) {
             super(in);
-            wrappedState = in.readParcelable(loader);
+            wrappedState = in.readParcelable(null);
         }
 
         @Override
@@ -1180,16 +1179,15 @@ public class StickyListHeadersListView extends FrameLayout {
             out.writeValue(wrappedState);
         }
 
-        public static final Creator<SavedState> CREATOR = ParcelableCompat.newCreator(
-                new ParcelableCompatCreatorCallbacks<SavedState>() {
-                    @Override
-                    public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                        return new SavedState(in, loader);
-                    }
-                    @Override
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                });
+        public static final Parcelable.Creator<SavedState> CREATOR
+            = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

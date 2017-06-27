@@ -11,9 +11,6 @@ android {
             res.srcDirs = ['res']
         }
     }
-    dependencies {
-        compile "com.android.support:support-v4:22.0.0"
-    }
 }
 
 apply from: 'gradle-mvn-push.gradle'

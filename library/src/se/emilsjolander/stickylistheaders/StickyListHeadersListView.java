@@ -1176,7 +1176,7 @@ public class StickyListHeadersListView extends FrameLayout {
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeValue(wrappedState);
+            out.writeParcelable(wrappedState, flags);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR

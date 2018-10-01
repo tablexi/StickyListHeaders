@@ -18,7 +18,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 def isReleaseBuild() {
-    return VERSION_NAME.contains("SNAPSHOT") == false
+    return '2.7.0'.contains("SNAPSHOT") == false
 }
 
 def getReleaseRepositoryUrl() {
@@ -45,9 +45,9 @@ afterEvaluate { project ->
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                pom.groupId = GROUP
+                pom.groupId = 'se.emilsjolander'
                 pom.artifactId = POM_ARTIFACT_ID
-                pom.version = VERSION_NAME
+                pom.version = '2.7.0'
 
                 repository(url: getReleaseRepositoryUrl()) {
                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
@@ -59,28 +59,28 @@ afterEvaluate { project ->
                 pom.project {
                     name POM_NAME
                     packaging POM_PACKAGING
-                    description POM_DESCRIPTION
-                    url POM_URL
+                    description 'A small android library that makes it easy to make lists with section headers that stick to the top until a new section header comes along.'
+                    url 'https://github.com/emilsjolander/StickyListHeaders'
 
                     scm {
-                        url POM_SCM_URL
-                        connection POM_SCM_CONNECTION
-                        developerConnection POM_SCM_DEV_CONNECTION
+                        url 'https://github.com/emilsjolander/StickyListHeaders'
+                        connection 'scm:git:git://github.com/emilsjolander/StickyListHeaders.git'
+                        developerConnection 'scm:git:git://github.com/emilsjolander/StickyListHeaders.git'
                     }
 
                     licenses {
                         license {
-                            name POM_LICENCE_NAME
-                            url POM_LICENCE_URL
-                            distribution POM_LICENCE_DIST
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
                         }
                     }
 
                     developers {
                         developer {
-                            id POM_DEVELOPER_ID
-                            name POM_DEVELOPER_NAME
-                            email POM_DEVELOPER_EMAIL
+                            id 'emilsjolander'
+                            name 'Emil Sjolander'
+                            email 'sjolander.emil@gmail.com'
                         }
                     }
                 }
